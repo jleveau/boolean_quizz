@@ -1,48 +1,53 @@
-import React, { Component } from 'react'
+import React, {
+  Component
+} from 'react'
 import DifficultySelectionPage from './DifficultySelectionPage/DifficultySelectionPage'
 import QuestionsPage from './QuestionPage/QuestionPage'
 import ResultPage from './ResultPage/ResultPage'
 import './App.css'
-
-const question_per_difficulty = {
-  Easy: 2,
-  Medium: 5,
-  Hard: 10
-}
+import config from './config'
 
 class App extends Component {
-  
+
   constructor(props) {
     super(props)
     this.state = {
-      current_step: "difficulty_selection"
+      current_step: "difficulty_selection",
+      nb_bugs: config.nb_bugs
     }
   }
 
-  onDifficultySelected = (difficulty) => {
+  onDifficultySelected = (nb_questions) => {
     this.setState({
-      difficulty: difficulty,
+      nb_questions: parseInt(nb_questions),
       current_step: "questions"
     })
-  } 
+  }
 
-  onQuestionsAnswered = (answered_questions) => {
+  onQuestionsAnswered = (questions, answers) => {
     this.setState({
       current_step: "result",
-      answered_questions: answered_questions
+      questions,
+      answers
     })
   }
 
   render() {
     const step = this.state.current_step
+    let page_content;
     if (step === "difficulty_selection") {
-      return <DifficultySelectionPage notifyDifficultySelected={this.onDifficultySelected}/>
-    }
-    else if (step === "questions") {
-      return  <QuestionsPage nb_questions={question_per_difficulty[this.state.difficulty]}/>
+      page_content = <DifficultySelectionPage notifyDifficultySelected = {this.onDifficultySelected} />
+    } else if (step === "questions") {
+      page_content = <QuestionsPage nb_questions = { this.state.nb_questions }
+                            notifyQuestionsAnswered = {this.onQuestionsAnswered } />
     } else if (step === "result") {
-      return <ResultPage/>
+      page_content = <ResultPage questions = { this.state.questions }
+                         answers = { this.state.answers }
+                         nb_bugs = { this.state.nb_bugs }/>
     }
+    return <div className="container main_page">
+      {page_content}
+    </div>
   }
 }
 
