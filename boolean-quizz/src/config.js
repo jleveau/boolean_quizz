@@ -1,3 +1,4 @@
 export default {
-    nb_bugs: 0
+    nbBugs: 0,
+    questionsOptions: [1, 2, 5, 10]
 }

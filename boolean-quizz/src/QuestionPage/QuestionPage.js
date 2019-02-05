@@ -16,7 +16,7 @@ export default class QuestionPage extends Component {
         this.state = {
             answers: [],
             questions,
-            nb_bugs: config.nb_bugs
+            nb_bugs: config.nbBugs
         }
     }
 
@@ -85,9 +85,12 @@ export default class QuestionPage extends Component {
                 </div>
                     
                 )}
-            
 
-                <button type="submit" className="btn btn-primary">Validate</button>
+                <button type="submit" 
+                        id="validate_button"
+                        className="btn btn-primary">
+                        Validate
+                </button>
             </form>
         
     }

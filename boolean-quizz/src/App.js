@@ -7,13 +7,15 @@ import ResultPage from './ResultPage/ResultPage'
 import './App.css'
 import config from './config'
 
+
 class App extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
       current_step: "difficulty_selection",
-      nb_bugs: config.nb_bugs
+      nbBugs: config.nbBugs,
+      questionsOptions: config.questionsOptions
     }
   }
 
@@ -36,14 +38,15 @@ class App extends Component {
     const step = this.state.current_step
     let page_content;
     if (step === "difficulty_selection") {
-      page_content = <DifficultySelectionPage notifyDifficultySelected = {this.onDifficultySelected} />
+      page_content = <DifficultySelectionPage questionsOptions={this.state.questionsOptions} 
+                                              notifyDifficultySelected = {this.onDifficultySelected} />
     } else if (step === "questions") {
       page_content = <QuestionsPage nb_questions = { this.state.nb_questions }
                             notifyQuestionsAnswered = {this.onQuestionsAnswered } />
     } else if (step === "result") {
       page_content = <ResultPage questions = { this.state.questions }
                          answers = { this.state.answers }
-                         nb_bugs = { this.state.nb_bugs }/>
+                         nb_bugs = { this.state.nbBugs }/>
     }
     return <div className="container main_page">
       {page_content}

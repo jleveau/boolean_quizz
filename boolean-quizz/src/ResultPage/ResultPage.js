@@ -6,14 +6,16 @@ export default class ResultPage extends Component {
 
     constructor(props) {
         super(props);
-        const {global_result, results} = this.computeResult(props.questions, props.answers, props.nb_bugs)
+        const {global_result, score} = this.computeResult(props.questions, props.answers, props.nb_bugs)
 
         this.state = {
             answers: props.answers,
             questions: props.questions,
-            global_result: global_result,
-            results: results,
+            global_result,
+            score,
         }
+        console.log(this.state)
+
     }
 
     computeResult(questions, answers, nb_bugs) {
@@ -46,16 +48,15 @@ export default class ResultPage extends Component {
         let indexes = results.map((result, index) => index)
         indexes = shuffle(indexes).slice(0, nb_bugs)
         indexes.forEach((index) => {results[index] = !results[index]})  
-        const global_result = results.every(result => result)
         return {
-            global_result: global_result,
-            results
+            global_result: results.every(result => result),
+            score: results.filter(result => result).length
         }
     }
 
     render() {
         return <div className={this.state.global_result ? "alert alert-success" : "alert alert-danger" } role="alert">
-            <h4 id="result" className="alert-heading">{this.state.global_result ? "Correct !" : "Wrong !"}</h4>
+            <h4 id="result" className="alert-heading">{this.state.global_result ? "Correct !" : "Wrong !"} - Score : {this.state.score} / {this.state.questions.length}</h4>
         </div>
     }
 
