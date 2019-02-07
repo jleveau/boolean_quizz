@@ -20,20 +20,23 @@ The level of the bug determine the number of conditions to trigger the bug.
 
 The generated configuration file looks like :  
 
+
+```json
 {  
->    "question": 8,  
->    "effect": "visual",  
->    "dependencies": [  
->      {  
->>        "question": 5,  
->>        "value": true  
->    },  
->>     {  
->>        "question": 4,  
->>        "value": true  
->      }  
->    ]}  
+    "question": 8,  
+    "effect": "visual",  
+    "dependencies": [  
+      {  
+        "question": 5,  
+        "value": true  
+    },  
+     {  
+        "question": 4,  
+        "value": true  
+      }  
+    ]}  
 }
+```
 
 In this example, a popup will be triggered if you answer something in the question 8, when the question 5 and 4 are answered true  
 
