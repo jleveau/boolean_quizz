@@ -5,13 +5,19 @@ In the project directory, you can run:
 
 ### 'npm run-script bugs [nb_bugs ...]
 Instantiate a configuration file describing bugs.
-This configuration file is read by the application to introduce "bugs" in the application
+This configuration file is read by the application to introduce "bugs" 
+
 for example : 
     npm run-script bugs 10 0 0 1
-creates bugs for a quizz of 10 questions. With 0 bugs of level 0, 0 bugs of level 1 and 1 bug of level 2
-The level of the bugged determine the number of conditions to trigger the bug.
+    
+This command creates bugs for a quizz of 10 questions, with :
+0 bug of level 0 
+0 bug of level 1 
+1 bug of level 2.
 
-The configuration file looks like : 
+The level of the bug determine the number of conditions to trigger the bug.
+
+The generated configuration file looks like : 
 
 {
     "question": 8,
