@@ -1,0 +1,12 @@
+[
+  {
+    "question": 0,
+    "effect": "visual",
+    "dependencies": [
+      {
+        "question": 1,
+        "value": false
+      }
+    ]
+  }
+]

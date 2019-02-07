@@ -6,7 +6,7 @@ import QuestionsPage from './QuestionPage/QuestionPage'
 import ResultPage from './ResultPage/ResultPage'
 import './App.css'
 import config from './config'
-
+import QuestionModule from './modules/questions/questions_module'
 
 class App extends Component {
 
@@ -14,22 +14,21 @@ class App extends Component {
     super(props)
     this.state = {
       current_step: "difficulty_selection",
-      nbBugs: config.nbBugs,
-      questionsOptions: config.questionsOptions
+      questionsOptions: config.questionsOptions,
+      questionModule: new QuestionModule()
     }
   }
 
   onDifficultySelected = (nb_questions) => {
+    this.state.questionModule.createQuestions(nb_questions)
     this.setState({
-      nb_questions: parseInt(nb_questions),
       current_step: "questions"
     })
   }
 
-  onQuestionsAnswered = (questions, answers) => {
+  onQuestionsAnswered = (answers) => {
     this.setState({
       current_step: "result",
-      questions,
       answers
     })
   }
@@ -40,13 +39,15 @@ class App extends Component {
     if (step === "difficulty_selection") {
       page_content = <DifficultySelectionPage questionsOptions={this.state.questionsOptions} 
                                               notifyDifficultySelected = {this.onDifficultySelected} />
+
     } else if (step === "questions") {
-      page_content = <QuestionsPage nb_questions = { this.state.nb_questions }
+      page_content = <QuestionsPage question_module = { this.state.questionModule }
                             notifyQuestionsAnswered = {this.onQuestionsAnswered } />
+                            
     } else if (step === "result") {
-      page_content = <ResultPage questions = { this.state.questions }
+      page_content = <ResultPage question_module = { this.state.questionModule }
                          answers = { this.state.answers }
-                         nb_bugs = { this.state.nbBugs }/>
+                         />
     }
     return <div className="container main_page">
       {page_content}

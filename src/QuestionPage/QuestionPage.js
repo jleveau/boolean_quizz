@@ -1,50 +1,38 @@
 import React, {Component} from 'react'
-import config from '../config';
 import "./questionPage.css";
-const unary_operator = ["!", ""]
-const binary_operators = ["AND", "OR"]
-const operand = ["TRUE", "FALSE"]
+
 
 export default class QuestionPage extends Component {
 
     constructor(props) {
         super(props);
-        const questions = []
-        for (let i = 0; i < this.props.nb_questions; ++i) {
-            questions.push(this.createQuestion())
-        }
         this.state = {
             answers: [],
-            questions,
-            nb_bugs: config.nbBugs
-        }
-    }
-
-    createQuestion() {
-        return {
-            left_unary: unary_operator[Math.floor(Math.random() * unary_operator.length)],
-            left_operand: operand[Math.floor(Math.random() * operand.length)],
-            right_unary: unary_operator[Math.floor(Math.random() * unary_operator.length)],
-            right_operand: operand[Math.floor(Math.random() * operand.length)],
-            operator: binary_operators[Math.floor(Math.random() * binary_operators.length)],
+            question_module: this.props.question_module
         }
     }
 
     handleAnswerChanged = (changeEvent) => {
         const answers = this.state.answers;
-        answers[parseInt(changeEvent.target.name)] = (changeEvent.target.value  === 'true')
+        const question_index = parseInt(changeEvent.target.name)
+        answers[question_index] = (changeEvent.target.value  === 'true')
         this.setState({answers})
+        if (this.state.question_module.isVisualBugTriggered(this.state.question_module.questions[question_index], answers)) {
+            console.log("in")
+            alert("Totally not a bug")
+        }
     }
 
     handleValidate = (changeEvent) => {
         changeEvent.preventDefault();
-        this.props.notifyQuestionsAnswered(this.state.questions, this.state.answers)
+        this.props.notifyQuestionsAnswered(this.state.answers)
     }
 
     render() {
         return <form className="form-group" onSubmit={this.handleValidate}>
-                {this.state.questions.map((question, index) =>
+                {this.state.question_module.questions.map((question, index) =>
                     <div key={index}>
+                        Question {index}
                         <div  className="row">
                         <div className="col-form-label col-sm-2 pt-0">
                             <span className="unary_operator">{question.left_unary} </span> 

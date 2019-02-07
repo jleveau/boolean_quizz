@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "bugs": "node ./generate_bugs/generate_bugs.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
