@@ -5,7 +5,8 @@ In the project directory, you can run:
 
 ### 'npm run-script bugs [nb_bugs ...]
 Instantiate a configuration file describing bugs.
-This configuration file is read by the application to introduce "bugs" 
+This configuration file is read by the application to introduce "bugs"
+this configuration file is located in /src/bugs.json
 
 for example : 
     npm run-script bugs 10 0 0 1
