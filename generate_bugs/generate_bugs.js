@@ -1,6 +1,7 @@
 const fs = require('fs')
 const config = require("../src/config")
 const bugs_file = config.bugfile
+const seedrandom = require('seedrandom')
 
 class BugGenerationModule {
 
@@ -9,6 +10,7 @@ class BugGenerationModule {
     generateBugs(params) {
         const quizz_size = parseInt(params.shift())
         const complexity_array = params
+        seedrandom(config.random_seed, { global: true });
 
         // Check if there is enough line in the quizz to create the bugs
         let nb_lines_required = 0

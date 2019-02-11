@@ -1,6 +1,5 @@
 
 import React, {Component} from 'react'
-import QuestionModule from '../modules/questions/questions_module'
 
 export default class ResultPage extends Component {
 
