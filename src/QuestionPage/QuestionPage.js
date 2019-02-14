@@ -5,9 +5,15 @@ import "./questionPage.css";
 export default class QuestionPage extends Component {
 
     constructor(props) {
+        
         super(props);
+        const answers = []
+        const keeped_answers = this.props.question_module.keeped_answers
+        for (const i in keeped_answers) {
+            answers[i] = keeped_answers[i]
+        }
         this.state = {
-            answers: [],
+            answers,
             question_module: this.props.question_module
         }
     }
@@ -18,7 +24,6 @@ export default class QuestionPage extends Component {
         answers[question_index] = (changeEvent.target.value  === 'true')
         this.setState({answers})
         if (this.state.question_module.isVisualBugTriggered(this.state.question_module.questions[question_index], answers)) {
-            console.log("in")
             alert("Totally not a bug")
         }
     }
@@ -26,6 +31,11 @@ export default class QuestionPage extends Component {
     handleValidate = (changeEvent) => {
         changeEvent.preventDefault();
         this.props.notifyQuestionsAnswered(this.state.answers)
+    }
+
+    handleCancel = (cancelEvent) => {
+        cancelEvent.preventDefault();
+        this.props.notifyCancel();
     }
 
     render() {
@@ -78,6 +88,12 @@ export default class QuestionPage extends Component {
                         id="validate_button"
                         className="btn btn-primary">
                         Validate
+                </button>
+                <button type="button" 
+                        id="cancel_button"
+                        onClick={this.handleCancel}
+                        className="btn btn-secondary">
+                        Cancel
                 </button>
             </form>
         

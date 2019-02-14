@@ -1,7 +1,8 @@
 const fs = require('fs')
 const config = require("../src/config")
 const bugs_file = config.bugfile
-const seedrandom = require('seedrandom')
+
+const possiblesEffects = ["score", "visual", "keep"]
 
 class BugGenerationModule {
 
@@ -10,7 +11,6 @@ class BugGenerationModule {
     generateBugs(params) {
         const quizz_size = parseInt(params.shift())
         const complexity_array = params
-        seedrandom(config.random_seed, { global: true });
 
         // Check if there is enough line in the quizz to create the bugs
         let nb_lines_required = 0
@@ -41,7 +41,7 @@ class BugGenerationModule {
 
                 bugs_for_complexity.push({
                     question: bugged_line,
-                    effect: Math.random() >= 0.5 ? "visual" : "score",
+                    effect: getBugEffect(),
                     dependencies: cut[0].map(question => ({
                         question,
                         value: Math.random() >= 0.5
@@ -53,6 +53,10 @@ class BugGenerationModule {
         return bugs
     }
 
+}
+
+function getBugEffect() {
+    return possiblesEffects[Math.floor(Math.random() * possiblesEffects.length)]
 }
 
 // Return n random lines, and remove them from the array

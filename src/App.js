@@ -30,9 +30,16 @@ class App extends Component {
   }
 
   onQuestionsAnswered = (answers) => {
+    this.state.questionModule.applyKeepBugs(answers)
     this.setState({
       current_step: "result",
       answers
+    })
+  }
+
+  notifyRestart = () => {
+    this.setState({
+      current_step: "difficulty_selection"
     })
   }
 
@@ -45,11 +52,13 @@ class App extends Component {
 
     } else if (step === "questions") {
       page_content = <QuestionsPage question_module = { this.state.questionModule }
-                            notifyQuestionsAnswered = {this.onQuestionsAnswered } />
+                            notifyQuestionsAnswered = {this.onQuestionsAnswered } 
+                            notifyCancel = {this.notifyRestart} />
                             
     } else if (step === "result") {
       page_content = <ResultPage question_module = { this.state.questionModule }
                          answers = { this.state.answers }
+                         notifyRestart = { this.notifyRestart }
                          />
     }
     return <div className="container main_page">

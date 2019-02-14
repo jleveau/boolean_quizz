@@ -1,31 +1,21 @@
 [
   {
-    "question": 7,
-    "effect": "visual",
-    "dependencies": [
-      {
-        "question": 4,
-        "value": true
-      }
-    ]
+    "question": 1,
+    "effect": "keep",
+    "dependencies": []
   },
   {
-    "question": 6,
+    "question": 4,
     "effect": "score",
-    "dependencies": [
-      {
-        "question": 8,
-        "value": true
-      }
-    ]
+    "dependencies": []
   },
   {
     "question": 2,
-    "effect": "score",
+    "effect": "visual",
     "dependencies": [
       {
         "question": 0,
-        "value": false
+        "value": true
       }
     ]
   }

@@ -16,9 +16,24 @@ export default class ResultPage extends Component {
         }
     }
 
+    handleRestart = (restartEvent) => {
+        restartEvent.preventDefault();
+        this.props.notifyRestart();
+    }
+
     render() {
-        return <div className={this.state.global_result ? "alert alert-success" : "alert alert-danger" } role="alert">
-            <h4 id="result" className="alert-heading">{this.state.global_result ? "Correct !" : "Wrong !"} - Score : {this.state.score} / {this.state.question_module.questions.length}</h4>
+        return <div> 
+                <div className={this.state.global_result ? "alert alert-success" : "alert alert-danger" } role="alert">
+                    <h4 id="result" 
+                        className="alert-heading">{this.state.global_result ? "Correct !" : "Wrong !"} - Score : {this.state.score} / {this.state.question_module.questions.length}
+                    </h4>
+                
+                </div>
+                <button type="button" 
+                        className="btn btn-primary btn-lg btn-block"
+                        onClick={this.handleRestart}>
+                        Restart
+                </button>
         </div>
     }
 

@@ -9,6 +9,7 @@ const operand = ["TRUE", "FALSE"]
 export default class QuestionModule {
 
     constructor() {
+        this.keeped_answers = {}
         this.bugs = bugs_descriptions.map((bug_description) => 
             new Bug(bug_description.question, 
                 bug_description.effect, 
@@ -44,6 +45,18 @@ export default class QuestionModule {
             return result
         })
         return results.filter(result => result).length
+    }
+
+    applyKeepBugs(answers) {
+        this.questions.forEach((question, index) => {
+            if (this.isKeepBugTriggered(question, answers)) {
+                this.keeped_answers[index] = answers[index]
+            }
+        })
+    }
+
+    isKeepBugTriggered(question, answers) {
+        return question.bugs.some(bug =>bug.effect === 'keep') && this.isBugTriggered(question, answers)
     }
 
     isVisualBugTriggered(question, answers) {
