@@ -1,6 +1,7 @@
 
 import React, {Component} from 'react'
 import './DifficultySelectionPage.css'
+import QuizzButton from '../Components/quizz_button';
 
 
 export default class DifficultySelectionPage extends Component {
@@ -23,13 +24,13 @@ export default class DifficultySelectionPage extends Component {
           <hr className="my-4"/>
             <div className="btn-group" role="group" aria-label="Basic example">
                 {this.state.questionsOptions.map((option, index) => 
-                    <button key={index}
+                    <QuizzButton key={index}
                             name={"question_options-" + option }
                             type="button" 
                             className="btn btn-secondary" 
                             value={option} 
-                            onClick={this.notifyDifficultySelected}>{option}
-                    </button>)}
+                            handle={this.notifyDifficultySelected}>{option}
+                    </QuizzButton>)}
             </div>
         </div>
     }

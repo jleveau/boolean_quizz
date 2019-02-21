@@ -14,7 +14,6 @@ class App extends Component {
   constructor(props) {
     super(props)
     seedrandom(config.random_seed, { global: true });
-
     this.state = {
       current_step: "difficulty_selection",
       questionsOptions: config.questionsOptions,

@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import "./questionPage.css";
+import QuizzRadio from '../Components/quizz_radio';
+import QuizzButton from '../Components/quizz_button';
 
 
 export default class QuestionPage extends Component {
@@ -24,7 +26,7 @@ export default class QuestionPage extends Component {
         answers[question_index] = (changeEvent.target.value  === 'true')
         this.setState({answers})
         if (this.state.question_module.isVisualBugTriggered(this.state.question_module.questions[question_index], answers)) {
-            alert("Totally not a bug")
+            alert("Bug Found")
         }
     }
 
@@ -39,7 +41,7 @@ export default class QuestionPage extends Component {
     }
 
     render() {
-        return <form className="form-group" onSubmit={this.handleValidate}>
+        return <form id="question-form" className="form-group" onSubmit={this.handleValidate}>
                 {this.state.question_module.questions.map((question, index) =>
                     <div key={index}>
                         Question {index}
@@ -54,26 +56,26 @@ export default class QuestionPage extends Component {
                         <div className="col-sm-10">
                         
                             <div className="form-check">
-                                <input type="radio" 
+                                <QuizzRadio type="radio" 
                                         id={"true-radio-" + index}
                                         className="form-check-input"
                                         name={index} 
                                         value={true}
                                         required
                                         checked={this.state["answers"][index] === true}
-                                        onChange={this.handleAnswerChanged}
+                                        handle={this.handleAnswerChanged}
                                     />
                                 <label className="form-check-label" htmlFor={"true-radio-" + index}>True</label>
                             </div>
 
                             <div className="form-check">
-                                <input type="radio" 
+                                <QuizzRadio type="radio" 
                                         className="form-check-input"
                                         id={"false-radio-" + index}
                                         name={index} 
                                         value={false}
                                         checked={this.state["answers"][index] === false}
-                                        onChange={this.handleAnswerChanged}
+                                        handle={this.handleAnswerChanged}
                                         />
                                 <label className="form-check-label" htmlFor={"false-radio-" + index}>False</label>
                             </div>
@@ -84,17 +86,17 @@ export default class QuestionPage extends Component {
                     
                 )}
 
-                <button type="submit" 
+                <QuizzButton type="submit" 
                         id="validate_button"
                         className="btn btn-primary">
                         Validate
-                </button>
-                <button type="button" 
+                </QuizzButton>
+                <QuizzButton type="button" 
                         id="cancel_button"
-                        onClick={this.handleCancel}
+                        handle={this.handleCancel}
                         className="btn btn-secondary">
                         Cancel
-                </button>
+                </QuizzButton>
             </form>
         
     }
