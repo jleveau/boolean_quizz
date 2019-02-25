@@ -3,5 +3,6 @@ export class Bug {
         this.question = question
         this.effect = effect
         this.dependencies = dependencies
+        this.triggered = false
     }
 }

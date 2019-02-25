@@ -1,7 +1,8 @@
 module.exports = {
     bugfile: './src/bugs.json',
-    nbComplexBugs: 1,
-    complexBugsComplexity: 2,
     questionsOptions: [1, 3, 7],
-    random_seed: "chaussette"
+    random_seed: "chaussette",
+    depth: 4,
+    // colors from low to high entropy
+    colors: ["#4c00aa", "46568f", "56aa81", "64ff4b", "60d470", "6bff48"]
 }

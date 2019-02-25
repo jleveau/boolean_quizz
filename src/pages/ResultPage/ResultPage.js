@@ -12,11 +12,13 @@ export default class ResultPage extends Component {
             answers: props.answers,
             question_module: this.props.question_module,
             global_result,
+            naturalnessModule: this.props.naturalnessModule,
             score,
         }
     }
 
     handleRestart = (restartEvent) => {
+        this.state.naturalnessModule.notify(restartEvent.target)
         restartEvent.preventDefault();
         this.props.notifyRestart();
     }
@@ -29,7 +31,8 @@ export default class ResultPage extends Component {
                     </h4>
                 
                 </div>
-                <button type="button" 
+                <button type="button"
+                        id="restart"
                         className="btn btn-primary btn-lg btn-block"
                         onClick={this.handleRestart}>
                         Restart

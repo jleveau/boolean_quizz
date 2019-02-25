@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 import "./questionPage.css";
-import QuizzRadio from '../Components/quizz_radio';
-import QuizzButton from '../Components/quizz_button';
 
 
 export default class QuestionPage extends Component {
@@ -16,32 +14,41 @@ export default class QuestionPage extends Component {
         }
         this.state = {
             answers,
-            question_module: this.props.question_module
+            question_module: this.props.question_module,
+            naturalnessModule: this.props.naturalnessModule
         }
     }
 
     handleAnswerChanged = (changeEvent) => {
+        this.state.naturalnessModule.notify(changeEvent.target)
+
         const answers = this.state.answers;
         const question_index = parseInt(changeEvent.target.name)
+        const question = this.state.question_module.questions[question_index] 
         answers[question_index] = (changeEvent.target.value  === 'true')
         this.setState({answers})
-        if (this.state.question_module.isVisualBugTriggered(this.state.question_module.questions[question_index], answers)) {
-            alert("Bug Found")
-        }
+        this.state.question_module.triggerBugs(question, answers)
+        this.forceUpdate()
     }
 
-    handleValidate = (changeEvent) => {
-        changeEvent.preventDefault();
+    handleSubmit = (submitEvent) => {
+        submitEvent.preventDefault();
         this.props.notifyQuestionsAnswered(this.state.answers)
     }
 
     handleCancel = (cancelEvent) => {
+        this.state.naturalnessModule.notify(cancelEvent.target)
         cancelEvent.preventDefault();
         this.props.notifyCancel();
     }
 
+    handleValidate = (validateEvent) => {
+        this.state.naturalnessModule.notify(validateEvent.target)
+        this.forceUpdate()
+    }
+
     render() {
-        return <form id="question-form" className="form-group" onSubmit={this.handleValidate}>
+        return <form id="question-form" className="form-group" onSubmit={this.handleSubmit}>
                 {this.state.question_module.questions.map((question, index) =>
                     <div key={index}>
                         Question {index}
@@ -54,29 +61,33 @@ export default class QuestionPage extends Component {
                             <span className="operand">{question.right_operand}</span>
                         </div>                        
                         <div className="col-sm-10">
-                        
                             <div className="form-check">
-                                <QuizzRadio type="radio" 
-                                        id={"true-radio-" + index}
-                                        className="form-check-input"
-                                        name={index} 
-                                        value={true}
-                                        required
-                                        checked={this.state["answers"][index] === true}
-                                        handle={this.handleAnswerChanged}
-                                    />
+                                {this.state.naturalnessModule.applyMask(
+                                    <input type="radio" 
+                                    id={"true-radio-" + this.state.question_module.questions.length + "-" + index}
+                                    className="form-check-input"
+                                    name={index} 
+                                    value={true}
+                                    required
+                                    checked={this.state["answers"][index] === true}
+                                    onChange={this.handleAnswerChanged}
+                                />
+                                )}
+                                
                                 <label className="form-check-label" htmlFor={"true-radio-" + index}>True</label>
                             </div>
 
                             <div className="form-check">
-                                <QuizzRadio type="radio" 
+                                {this.state.naturalnessModule.applyMask(
+                                    <input type="radio" 
                                         className="form-check-input"
-                                        id={"false-radio-" + index}
+                                        id={"false-radio-" + this.state.question_module.questions.length + "-" + index}
                                         name={index} 
                                         value={false}
                                         checked={this.state["answers"][index] === false}
-                                        handle={this.handleAnswerChanged}
+                                        onChange={this.handleAnswerChanged}
                                         />
+                                )}
                                 <label className="form-check-label" htmlFor={"false-radio-" + index}>False</label>
                             </div>
                         </div>
@@ -85,19 +96,22 @@ export default class QuestionPage extends Component {
                 </div>
                     
                 )}
-
-                <QuizzButton type="submit" 
-                        id="validate_button"
-                        className="btn btn-primary">
-                        Validate
-                </QuizzButton>
-                <QuizzButton type="button" 
-                        id="cancel_button"
-                        handle={this.handleCancel}
-                        className="btn btn-secondary">
-                        Cancel
-                </QuizzButton>
+                {this.state.naturalnessModule.applyMask(
+                    <button type="submit" 
+                            id="validate_button"
+                            onClick={this.handleValidate}
+                            className="btn btn-primary">
+                            Validate
+                    </button>
+                )}
+                {this.state.naturalnessModule.applyMask(
+                    <button type="button" 
+                            id="cancel_button"
+                            onClick={this.handleCancel}
+                            className="btn btn-secondary">
+                            Cancel
+                    </button>
+                )}
             </form>
-        
     }
 }

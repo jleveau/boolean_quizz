@@ -1,6 +1,8 @@
 import BooleanQuestion from './question'
 import bugs_descriptions from '../../bugs.json'
-import { Bug } from './bugs';
+import {
+    Bug
+} from './bugs';
 
 const unary_operator = ["!", ""]
 const binary_operators = ["AND", "OR"]
@@ -10,15 +12,20 @@ export default class QuestionModule {
 
     constructor() {
         this.keeped_answers = {}
-        this.bugs = bugs_descriptions.map((bug_description) => 
-            new Bug(bug_description.question, 
-                bug_description.effect, 
+        this.bug_observers = []
+        this.bugs = bugs_descriptions.map((bug_description) =>
+            new Bug(bug_description.question,
+                bug_description.effect,
                 bug_description.dependencies))
+    }
+
+    addBugsObserver(observer) {
+        this.bug_observers.push(observer)
     }
 
     createQuestions(n) {
         const questions = []
-        for (let i=0; i<n; ++i) {
+        for (let i = 0; i < n; ++i) {
             const bugs_for_question = this.bugs.filter(bug => bug.question === i)
             questions.push(new BooleanQuestion(
                 unary_operator[Math.floor(Math.random() * unary_operator.length)],
@@ -27,7 +34,7 @@ export default class QuestionModule {
                 unary_operator[Math.floor(Math.random() * operand.length)],
                 operand[Math.floor(Math.random() * binary_operators.length)],
                 bugs_for_question
-                ))
+            ))
         }
         this.questions = questions
     }
@@ -56,11 +63,11 @@ export default class QuestionModule {
     }
 
     isKeepBugTriggered(question, answers) {
-        return question.bugs.some(bug =>bug.effect === 'keep') && this.isBugTriggered(question, answers)
+        return question.bugs.some(bug => bug.effect === 'keep') && this.isBugTriggered(question, answers)
     }
 
     isVisualBugTriggered(question, answers) {
-        return question.bugs.some(bug =>bug.effect === 'visual') && this.isBugTriggered(question, answers)
+        return question.bugs.some(bug => bug.effect === 'visual') && this.isBugTriggered(question, answers)
     }
 
     isScoreBugTriggered(question, answers) {
@@ -70,15 +77,37 @@ export default class QuestionModule {
     isBugTriggered(question, answers) {
 
         return question.bugs.some(bug => {
-                if (bug.dependencies.length === 0) {
-                    return true
-                } else {
-                    return bug.dependencies.every(dependency => {
-                        return answers[dependency.question] === dependency.value
-                    })
-                }
-                 
+            if (bug.dependencies.length === 0) {
+                return true
+            } else {
+                return bug.dependencies.every(dependency => {
+                    return answers[dependency.question] === dependency.value
+                })
+            }
         })
     }
-}
 
+    triggerBugs(question, answers) {
+        let bugs_triggered = question.bugs.filter(bug => {
+            if (bug.dependencies.length === 0) {
+                return true
+            } else {
+                return bug.dependencies.every(dependency => {
+                    return answers[dependency.question] === dependency.value
+                })
+            }
+        })
+
+        bugs_triggered.forEach(bug => {
+            bug.triggered = true
+            this.bug_observers.forEach(observer => observer.notifyBugTrigger())
+            if (bug.effect === "visual") {
+                alert("Bug")
+            }
+        });
+    }
+
+    getNbBugTriggered() {
+        return this.bugs.filter(bug => bug.triggered).length
+    }
+}
