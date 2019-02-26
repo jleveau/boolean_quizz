@@ -11,9 +11,23 @@ export default class DifficultySelectionPage extends Component {
             notifyDifficultySelected: props.notifyDifficultySelected,
             questionsOptions: props.questionsOptions,
             naturalnessModule: props.naturalnessModule,
-
+            experimentModule: props.experimentModule,
+            stopped: !props.experimentModule.experiment_running
         }
+        this.state.experimentModule.addObserver(this)
         this.handleSelected = this.handleSelected.bind(this)
+    }
+
+    notifyExperimentStart() {
+        this.setState({
+            stopped: false
+        })
+    }
+
+    notifyExperimentStop() {
+        this.setState({
+            stopped: true
+        })
     }
 
     handleSelected = (event) => {
@@ -42,6 +56,7 @@ export default class DifficultySelectionPage extends Component {
                     name={"question_options-" + option }
                     className="btn btn-secondary" 
                     onClick={this.handleSelected}
+                    disabled={this.state.stopped}
                     value={option}>
                     {option}
                 </button>))

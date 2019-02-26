@@ -14,6 +14,7 @@ export default class NaturalnessModule {
         this.components = []
         this.model = new NaturalnessModel()
         this.expedition = []
+        this.naturalness_activated = config.naturalness
     }
 
     notify(element) {
@@ -32,6 +33,10 @@ export default class NaturalnessModule {
         this.model.learn(sequence)
     }
 
+    notifyNaturalnessToggled() {
+        this.naturalness_activated = !this.naturalness_activated
+    }
+
     getEntropy(element) {
         const eventname = getEventNameFromElement(element)
         if (!eventname) {
@@ -45,6 +50,9 @@ export default class NaturalnessModule {
     }
 
     applyMask(element) {
+        if (!this.naturalness_activated) {
+            return element
+        }
         const entropy = this.getEntropy(element)
         const color = COLORS[Math.floor(entropy * (COLORS.length-1))]
         return React.cloneElement(element, {style: {

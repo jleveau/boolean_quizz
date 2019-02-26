@@ -14,7 +14,22 @@ export default class ResultPage extends Component {
             global_result,
             naturalnessModule: this.props.naturalnessModule,
             score,
+            experimentModule: props.experimentModule,
+            stopped: !props.experimentModule.experiment_running
         }
+        this.state.experimentModule.addObserver(this)
+    }
+
+    notifyExperimentStart() {
+        this.setState({
+            stopped: false
+        })
+    }
+
+    notifyExperimentStop() {
+        this.setState({
+            stopped: true
+        })
     }
 
     handleRestart = (restartEvent) => {
@@ -34,6 +49,7 @@ export default class ResultPage extends Component {
                 <button type="button"
                         id="restart"
                         className="btn btn-primary btn-lg btn-block"
+                        disabled={this.state.stopped}
                         onClick={this.handleRestart}>
                         Restart
                 </button>

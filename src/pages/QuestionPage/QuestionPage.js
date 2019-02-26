@@ -14,9 +14,24 @@ export default class QuestionPage extends Component {
         }
         this.state = {
             answers,
+            experimentModule: props.experimentModule,
             question_module: this.props.question_module,
-            naturalnessModule: this.props.naturalnessModule
+            naturalnessModule: this.props.naturalnessModule,
+            stopped: !props.experimentModule.experiment_running
         }
+        this.state.experimentModule.addObserver(this)
+    }
+
+    notifyExperimentStart() {
+        this.setState({
+            stopped: false
+        })
+    }
+
+    notifyExperimentStop() {
+        this.setState({
+            stopped: true
+        })
     }
 
     handleAnswerChanged = (changeEvent) => {
@@ -68,6 +83,7 @@ export default class QuestionPage extends Component {
                                     className="form-check-input"
                                     name={index} 
                                     value={true}
+                                    disabled={this.state.stopped}
                                     required
                                     checked={this.state["answers"][index] === true}
                                     onChange={this.handleAnswerChanged}
@@ -84,6 +100,7 @@ export default class QuestionPage extends Component {
                                         id={"false-radio-" + this.state.question_module.questions.length + "-" + index}
                                         name={index} 
                                         value={false}
+                                        disabled={this.state.stopped}
                                         checked={this.state["answers"][index] === false}
                                         onChange={this.handleAnswerChanged}
                                         />
@@ -99,6 +116,7 @@ export default class QuestionPage extends Component {
                 {this.state.naturalnessModule.applyMask(
                     <button type="submit" 
                             id="validate_button"
+                            disabled={this.state.stopped}
                             onClick={this.handleValidate}
                             className="btn btn-primary">
                             Validate
@@ -107,6 +125,7 @@ export default class QuestionPage extends Component {
                 {this.state.naturalnessModule.applyMask(
                     <button type="button" 
                             id="cancel_button"
+                            disabled={this.state.stopped}
                             onClick={this.handleCancel}
                             className="btn btn-secondary">
                             Cancel
