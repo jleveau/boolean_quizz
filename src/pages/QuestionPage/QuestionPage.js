@@ -17,32 +17,19 @@ export default class QuestionPage extends Component {
             experimentModule: props.experimentModule,
             question_module: this.props.question_module,
             naturalnessModule: this.props.naturalnessModule,
-            stopped: !props.experimentModule.experiment_running
+            bugModule: this.props.bugModule
         }
         this.state.experimentModule.addObserver(this)
     }
 
-    notifyExperimentStart() {
-        this.setState({
-            stopped: false
-        })
-    }
-
-    notifyExperimentStop() {
-        this.setState({
-            stopped: true
-        })
-    }
-
     handleAnswerChanged = (changeEvent) => {
         this.state.naturalnessModule.notify(changeEvent.target)
+        this.state.bugModule.notify(changeEvent.target)
 
         const answers = this.state.answers;
         const question_index = parseInt(changeEvent.target.name)
-        const question = this.state.question_module.questions[question_index] 
         answers[question_index] = (changeEvent.target.value  === 'true')
         this.setState({answers})
-        this.state.question_module.triggerBugs(question, answers)
         this.forceUpdate()
     }
 
@@ -53,12 +40,14 @@ export default class QuestionPage extends Component {
 
     handleCancel = (cancelEvent) => {
         this.state.naturalnessModule.notify(cancelEvent.target)
+        this.state.bugModule.notify(cancelEvent.target)
         cancelEvent.preventDefault();
         this.props.notifyCancel();
     }
 
     handleValidate = (validateEvent) => {
         this.state.naturalnessModule.notify(validateEvent.target)
+        this.state.bugModule.notify(validateEvent.target)
         this.forceUpdate()
     }
 
@@ -68,14 +57,14 @@ export default class QuestionPage extends Component {
                     <div key={index}>
                         Question {index}
                         <div  className="row">
-                        <div className="col-form-label col-sm-2 pt-0">
+                        <div className="col-form-label col-sm-4 pt-0">
                             <span className="unary_operator">{question.left_unary} </span> 
                             <span className="operand">{question.left_operand} </span>
                             <span className="operator">{question.operator} </span>
                             <span className="unary_operator">{question.right_unary} </span> 
                             <span className="operand">{question.right_operand}</span>
                         </div>                        
-                        <div className="col-sm-10">
+                        <div className="col-sm-6">
                             <div className="form-check">
                                 {this.state.naturalnessModule.applyMask(
                                     <input type="radio" 
@@ -83,7 +72,6 @@ export default class QuestionPage extends Component {
                                     className="form-check-input"
                                     name={index} 
                                     value={true}
-                                    disabled={this.state.stopped}
                                     required
                                     checked={this.state["answers"][index] === true}
                                     onChange={this.handleAnswerChanged}
@@ -100,7 +88,6 @@ export default class QuestionPage extends Component {
                                         id={"false-radio-" + this.state.question_module.questions.length + "-" + index}
                                         name={index} 
                                         value={false}
-                                        disabled={this.state.stopped}
                                         checked={this.state["answers"][index] === false}
                                         onChange={this.handleAnswerChanged}
                                         />
@@ -116,7 +103,6 @@ export default class QuestionPage extends Component {
                 {this.state.naturalnessModule.applyMask(
                     <button type="submit" 
                             id="validate_button"
-                            disabled={this.state.stopped}
                             onClick={this.handleValidate}
                             className="btn btn-primary">
                             Validate
@@ -125,7 +111,6 @@ export default class QuestionPage extends Component {
                 {this.state.naturalnessModule.applyMask(
                     <button type="button" 
                             id="cancel_button"
-                            disabled={this.state.stopped}
                             onClick={this.handleCancel}
                             className="btn btn-secondary">
                             Cancel

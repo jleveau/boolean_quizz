@@ -1,12 +1,11 @@
 export default class BooleanQuestion {
 
-    constructor(left_unary, left_operand, operator, right_unary, right_operand, bugs = []) {
+    constructor(left_unary, left_operand, operator, right_unary, right_operand) {
         this.left_unary = left_unary
         this.left_operand = left_operand
         this.operator = operator
         this.right_unary = right_unary
         this.right_operand = right_operand
-        this.bugs = bugs
     }
 
     resolve(answer_given) {

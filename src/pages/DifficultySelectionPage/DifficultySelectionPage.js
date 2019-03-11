@@ -1,7 +1,7 @@
 
 import React, {Component} from 'react'
 import './DifficultySelectionPage.css'
-
+import config from "../../config"
 
 export default class DifficultySelectionPage extends Component {
 
@@ -9,30 +9,19 @@ export default class DifficultySelectionPage extends Component {
         super(props);
         this.state = {
             notifyDifficultySelected: props.notifyDifficultySelected,
-            questionsOptions: props.questionsOptions,
+            questionsOptions: config.questionsOptions,
             naturalnessModule: props.naturalnessModule,
+            bugModule: this.props.bugModule,
             experimentModule: props.experimentModule,
-            stopped: !props.experimentModule.experiment_running
         }
         this.state.experimentModule.addObserver(this)
         this.handleSelected = this.handleSelected.bind(this)
     }
 
-    notifyExperimentStart() {
-        this.setState({
-            stopped: false
-        })
-    }
-
-    notifyExperimentStop() {
-        this.setState({
-            stopped: true
-        })
-    }
-
     handleSelected = (event) => {
         this.state.notifyDifficultySelected(event.target.value)
         this.state.naturalnessModule.notify(event.target)
+        this.state.bugModule.notify(event.target)
     }
 
     getOptions_probas
@@ -56,7 +45,6 @@ export default class DifficultySelectionPage extends Component {
                     name={"question_options-" + option }
                     className="btn btn-secondary" 
                     onClick={this.handleSelected}
-                    disabled={this.state.stopped}
                     value={option}>
                     {option}
                 </button>))

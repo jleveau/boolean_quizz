@@ -1,24 +1,25 @@
 import React, {
     Component
 } from 'react'
+import moment from 'moment'
 
 export default class Countdown extends Component {
 
     constructor(props) {
         super(props)
+
+        this.tick = this.tick.bind(this)
+        this.start = this.start.bind(this)
+
         this.state = {
             total_time: props.total_time,
             remaining_time: props.total_time,
             callback_finished: props.callback_finished,
-            callback_toggle: props.callback_toggle,
-            started: false,
-            interval: null,
+            started: true,
+            interval: setInterval(this.tick, 1000),
             observers: [],
 
         }
-        this.tick = this.tick.bind(this)
-        this.start = this.start.bind(this)
-        this.pause = this.pause.bind(this)
     }
 
     tick() {
@@ -29,7 +30,7 @@ export default class Countdown extends Component {
         }
         if (this.state.remaining_time - 1 < 0) {
             this.state.callback_finished()
-            this.pause()
+            clearInterval(this.state.interval)
         }
     }
 
@@ -38,25 +39,15 @@ export default class Countdown extends Component {
             interval: setInterval(this.tick, 1000),
             started: true
         })
-        this.state.callback_toggle()
     }
 
-    pause() {
-        clearInterval(this.state.interval)
-        this.setState({
-            started: false
-        })
-        this.state.callback_toggle()
+    // time in seconds
+    displayTime(time) {
+        return moment.utc(time*1000).format('mm:ss');
     }
 
     render() {
-        return <div>
-            Remaining time : {this.state.remaining_time} / {this.state.total_time}
-            <div>
-            <button type="button" className="btn btn-info" hidden={this.state.started || this.state.remaining_time <= 0} onClick={this.start}>Start</button>
-            <button type="button" className="btn btn-info" hidden={!this.state.started} onClick={this.pause}>Pause</button>
-            </div>
-        </div>
+        return <div> Remaining time : {this.displayTime(this.state.remaining_time)}</div>
     }
 
 }

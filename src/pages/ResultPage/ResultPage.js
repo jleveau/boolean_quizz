@@ -13,27 +13,16 @@ export default class ResultPage extends Component {
             question_module: this.props.question_module,
             global_result,
             naturalnessModule: this.props.naturalnessModule,
+            bugModule: this.props.bugModule,
             score,
             experimentModule: props.experimentModule,
-            stopped: !props.experimentModule.experiment_running
         }
         this.state.experimentModule.addObserver(this)
     }
 
-    notifyExperimentStart() {
-        this.setState({
-            stopped: false
-        })
-    }
-
-    notifyExperimentStop() {
-        this.setState({
-            stopped: true
-        })
-    }
-
     handleRestart = (restartEvent) => {
         this.state.naturalnessModule.notify(restartEvent.target)
+        this.state.bugModule.notify(restartEvent.target)
         restartEvent.preventDefault();
         this.props.notifyRestart();
     }
@@ -49,7 +38,6 @@ export default class ResultPage extends Component {
                 <button type="button"
                         id="restart"
                         className="btn btn-primary btn-lg btn-block"
-                        disabled={this.state.stopped}
                         onClick={this.handleRestart}>
                         Restart
                 </button>
