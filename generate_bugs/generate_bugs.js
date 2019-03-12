@@ -92,7 +92,7 @@ new SequenceGenerator().generateSequence()
             }
             sequences_per_level[i+1] = sequence_for_level
         }
-        fs.writeFileSync("./src/bugs.json", JSON.stringify(sequences_per_level, null, 2))
+        fs.writeFileSync("./front/src/bugs.json", JSON.stringify(sequences_per_level, null, 2))
     })
     .catch((err) => {
     console.log(err)

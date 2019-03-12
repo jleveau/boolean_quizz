@@ -1,0 +1,20 @@
+{
+  "name": "quizz_xp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "mocha test/index.test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.4.19",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "mocha": "^6.0.2"
+  }
+}
