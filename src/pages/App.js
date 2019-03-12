@@ -29,8 +29,7 @@ class App extends Component {
     this.notifyRestart = this.notifyRestart.bind(this)
     this.notifyExperimentFinished = this.notifyExperimentFinished.bind(this)
     this.onDifficultySelected = this.onDifficultySelected.bind(this)
-    this.state.experimentModule.addObserver(this)
-    this.state.experimentModule.addObserver(this.state.naturalnessModule)
+    this.state.bugModule.addObserver(this.state.experimentModule)
   }
 
   notifyRestart() {

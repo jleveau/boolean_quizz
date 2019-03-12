@@ -1,17 +1,25 @@
-[
-  {
-    "question": 5,
-    "effect": "visual",
-    "dependencies": []
-  },
-  {
-    "question": 4,
-    "effect": "visual",
-    "dependencies": [
-      {
-        "question": 6,
-        "value": true
-      }
+{
+  "1": [
+    [
+      "cancel_button"
     ]
-  }
-]
+  ],
+  "2": [
+    [
+      "validate_button",
+      "false-radio-5-2"
+    ]
+  ],
+  "3": [
+    [
+      "false-radio-5-0",
+      "false-radio-5-3",
+      "true-radio-5-3"
+    ],
+    [
+      "false-radio-5-4",
+      "true-radio-5-1",
+      "true-radio-5-4"
+    ]
+  ]
+}

@@ -1,79 +1,99 @@
+const puppeteer = require('puppeteer');
 const fs = require('fs')
-const config = require("../src/config")
-const bugs_file = config.bugfile
+const SEQUENCE_LENGTH = 100
+const EVENTS = [
+    'question_options-1',
+    'question_options-3',
+    'question_options-5',
 
-const possiblesEffects = ["score", "visual", "keep"]
+    'true-radio-1-0',
+    'false-radio-1-0',
+    'validate_button',
+    'cancel_button',
 
-class BugGenerationModule {
+    'true-radio-3-0',
+    'true-radio-3-1',
+    'true-radio-3-2',
+    'false-radio-3-0',
+    'false-radio-3-1',
+    'false-radio-3-2',
 
-    // Generate bugs, a bug on a question can require a specific value from other questions
-    // A bugged question cannot depend of an other bugged question
-    generateBugs(params) {
-        const quizz_size = parseInt(params.shift())
-        const complexity_array = params
+    'true-radio-5-0',
+    'true-radio-5-1',
+    'true-radio-5-2',
+    'true-radio-5-3',
+    'true-radio-5-4',
+    'false-radio-5-0',
+    'false-radio-5-1',
+    'false-radio-5-2',
+    'false-radio-5-3',
+    'false-radio-5-4',
+    'restart']
 
-        // Check if there is enough line in the quizz to create the bugs
-        let nb_lines_required = 0
-        complexity_array.forEach((bugs, complexity) => {
-            nb_lines_required += (bugs * (complexity+1))
-        })
+class SequenceGenerator {
+    
+    async getAvailableEvents() {
+        return await this.page.evaluate((selectors) => {
+            const existing_selectors = []
+            for (const selector of selectors) {
+                if (document.getElementById(selector)) {
+                    existing_selectors.push(selector)
+                }
+            }
+            return existing_selectors
+        }, EVENTS)
+    }
 
-        if (nb_lines_required >= quizz_size) {
-            console.error("the quizz does not contain enough questions")
-            process.exit()
+    // Giving previous event, to avoid picking the same event
+    async next(previous) {
+        let event;
+        do {
+            const available_events = await this.getAvailableEvents()
+            const index = Math.floor(Math.random() * available_events.length)
+            event = available_events[index]
+        } while(event === previous)
+       
+        await this.page.click(`#${event}`)
+        return event
+    }
+
+    async generateSequence() {
+        const sequence = []
+        this.browser = await puppeteer.launch();
+        this.page = await this.browser.newPage();
+
+        await this.page.goto('http://localhost:3000/');
+        await this.page.click('#next');
+        await this.page.click('#start');
+        let event
+        for (let i=0; i<SEQUENCE_LENGTH; ++i) {
+            event = await this.next(event)
+            sequence.push(event)
         }
-
-        //To be buggable, a line must not be already bugged, or be used to define a complex bug
-        let buggable_lines = Array.from({length: quizz_size}, (x,i) => i);
-        shuffle(buggable_lines)
-
-        let bugs = []
-        let cut;
-        complexity_array.forEach((nb_bugs, complexity) => {
-            cut = cutArray(buggable_lines, nb_bugs)
-            const bugged_lines = cut[0]
-            buggable_lines = cut[1]
-
-            const bugs_for_complexity = []
-            bugged_lines.forEach(bugged_line => {
-                cut = cutArray(buggable_lines, complexity)
-                buggable_lines = cut[1]
-
-                bugs_for_complexity.push({
-                    question: bugged_line,
-                    effect: getBugEffect(),
-                    dependencies: cut[0].map(question => ({
-                        question,
-                        value: Math.random() >= 0.5
-                    })) 
-                })
-            });
-            bugs = bugs.concat(bugs_for_complexity)
-        })
-        return bugs
+        await this.browser.close();
+        return sequence
     }
-
 }
 
-function getBugEffect() {
-    return possiblesEffects[Math.floor(Math.random() * possiblesEffects.length)]
+const levels = []
+for (let i= 2; i< process.argv.length; ++i) {
+    levels[i-2] = process.argv[i]
 }
-
-// Return n random lines, and remove them from the array
-function cutArray(array, n) {
-     return [array.slice(0, n), array.slice(n, array.length)]
-}
-
-function shuffle(a) {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[i] = a[j];
-        a[j] = x;
-    }
-    return a;
-}
-
-const bugs = new BugGenerationModule().generateBugs(process.argv.slice(2))
-fs.writeFileSync(bugs_file, JSON.stringify(bugs, null, 2))
+new SequenceGenerator().generateSequence()
+    .then((sequence) => {
+        const sequences_per_level = {}
+        for (let i = 0; i < levels.length; ++i) {
+            let sequence_for_level = []
+            while (levels[i] > 0) {
+                // Cut a sequence of length i
+                const min_index = Math.floor(Math.random() * sequence.length - (i+1))
+                sequence_for_level.push(sequence.slice(min_index, min_index + i+1))
+                --levels[i]
+            }
+            sequences_per_level[i+1] = sequence_for_level
+        }
+        fs.writeFileSync("./src/bugs.json", JSON.stringify(sequences_per_level, null, 2))
+    })
+    .catch((err) => {
+    console.log(err)
+})

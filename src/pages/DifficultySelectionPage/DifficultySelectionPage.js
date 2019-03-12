@@ -14,14 +14,13 @@ export default class DifficultySelectionPage extends Component {
             bugModule: this.props.bugModule,
             experimentModule: props.experimentModule,
         }
-        this.state.experimentModule.addObserver(this)
         this.handleSelected = this.handleSelected.bind(this)
     }
 
     handleSelected = (event) => {
         this.state.notifyDifficultySelected(event.target.value)
         this.state.naturalnessModule.notify(event.target)
-        this.state.bugModule.notify(event.target)
+        this.state.bugModule.notifyEvent(event.target.id)
     }
 
     getOptions_probas

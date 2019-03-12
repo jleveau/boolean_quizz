@@ -55,7 +55,7 @@ export default class IntroPage extends Component {
           </p>
           <hr className="my-4"/>
             <div className="btn-group" role="group" aria-label="Basic example">
-                <button onClick={this.handleNextButton} className="btn btn-primary">Next</button>
+                <button id="next" onClick={this.handleNextButton} className="btn btn-primary">Next</button>
             </div>
         </div>
     }
@@ -78,7 +78,7 @@ export default class IntroPage extends Component {
           
           <hr className="my-4"/>
             <div className="btn-group" role="group" aria-label="Basic example">
-                <button onClick={this.handleStartButton} className="btn btn-primary">Start</button>
+                <button id="start" onClick={this.handleStartButton} className="btn btn-primary">Start</button>
             </div>
         </div>
     }

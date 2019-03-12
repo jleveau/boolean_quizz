@@ -15,14 +15,12 @@ export default class ResultPage extends Component {
             naturalnessModule: this.props.naturalnessModule,
             bugModule: this.props.bugModule,
             score,
-            experimentModule: props.experimentModule,
         }
-        this.state.experimentModule.addObserver(this)
     }
 
     handleRestart = (restartEvent) => {
         this.state.naturalnessModule.notify(restartEvent.target)
-        this.state.bugModule.notify(restartEvent.target)
+        this.state.bugModule.notifyEvent(restartEvent.target.id)
         restartEvent.preventDefault();
         this.props.notifyRestart();
     }

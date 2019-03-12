@@ -14,17 +14,15 @@ export default class QuestionPage extends Component {
         }
         this.state = {
             answers,
-            experimentModule: props.experimentModule,
             question_module: this.props.question_module,
             naturalnessModule: this.props.naturalnessModule,
             bugModule: this.props.bugModule
         }
-        this.state.experimentModule.addObserver(this)
     }
 
     handleAnswerChanged = (changeEvent) => {
         this.state.naturalnessModule.notify(changeEvent.target)
-        this.state.bugModule.notify(changeEvent.target)
+        this.state.bugModule.notifyEvent(changeEvent.target.id)
 
         const answers = this.state.answers;
         const question_index = parseInt(changeEvent.target.name)
@@ -40,14 +38,14 @@ export default class QuestionPage extends Component {
 
     handleCancel = (cancelEvent) => {
         this.state.naturalnessModule.notify(cancelEvent.target)
-        this.state.bugModule.notify(cancelEvent.target)
+        this.state.bugModule.notifyEvent(cancelEvent.target.id)
         cancelEvent.preventDefault();
         this.props.notifyCancel();
     }
 
     handleValidate = (validateEvent) => {
         this.state.naturalnessModule.notify(validateEvent.target)
-        this.state.bugModule.notify(validateEvent.target)
+        this.state.bugModule.notifyEvent(validateEvent.target.id)
         this.forceUpdate()
     }
 
