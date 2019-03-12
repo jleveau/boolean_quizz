@@ -32,9 +32,20 @@ export default class BugModule {
         this.bugs.forEach(bug => {
             if (bug.isTriggered(this.sequence)) {
                 bug.triggered = true;
-                this.observers.forEach(obs => obs.notifyBugTriggered(bug))
+                this.showAlertMessage()
             }
         })
     }
 
+    showAlertMessage() {
+        alert("You have found a bug")
+    }
+
+    getBugsTriggered(level=null) {
+        return this.bugs.filter(bug => (level === null || bug.level === parseInt(level)) && bug.triggered)
+    }
+
+    getBugs(level=null) {
+        return this.bugs.filter(bug => (level === null || bug.level === parseInt(level)))
+    }
 }

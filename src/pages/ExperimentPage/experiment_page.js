@@ -10,7 +10,7 @@ export default class ExperimentPage extends Component {
         super(props)
         this.state = {
             question_module: props.question_module,
-            experiment_module: props.experiment_module,
+            bugModule: props.bugModule,
             naturalnessModule: props.naturalnessModule,
             nb_bug_found: 0,
             countdown_finished: props.countdown_finished,
@@ -41,7 +41,7 @@ export default class ExperimentPage extends Component {
     render() {
         return <div>
             <div>
-                <span>Bugs Found : {this.state.experiment_module.nb_bug_found}</span>
+                <span>Bugs Found : {this.state.bugModule.getBugsTriggered().length}</span>
                 <Countdown total_time={config.xp_time} callback_finished={this.finished}/>
             </div>
         </div>

@@ -11,8 +11,8 @@ import QuestionModule from '../modules/questions/questions_module'
 import seedrandom from 'seedrandom'
 import NaturalnessModule from '../modules/naturalness/naturalness_module'
 import ExperimentPage from './ExperimentPage/experiment_page'
-import ExperimentModule from '../modules/experiment/experimentModule'
 import BugModule from '../modules/bug/bug_module';
+import ExperimentResultPage from './ExperimentResultPage/ExperimentResultPage';
 
 class App extends Component {
 
@@ -23,13 +23,11 @@ class App extends Component {
       current_step: "intro",
       questionModule: new QuestionModule(),
       naturalnessModule: new NaturalnessModule(),
-      experimentModule: new ExperimentModule(),
       bugModule: new BugModule()
     }
     this.notifyRestart = this.notifyRestart.bind(this)
     this.notifyExperimentFinished = this.notifyExperimentFinished.bind(this)
     this.onDifficultySelected = this.onDifficultySelected.bind(this)
-    this.state.bugModule.addObserver(this.state.experimentModule)
   }
 
   notifyRestart() {
@@ -45,7 +43,9 @@ class App extends Component {
   }
 
   notifyExperimentFinished () {
-    console.log("xp finished")
+    this.setState({
+      current_step: "experiement_results"
+    })
   }
 
   onDifficultySelected = (nb_questions) => {
@@ -67,11 +67,10 @@ class App extends Component {
     let page_content;
 
     if (step === "intro") {
-      page_content = <IntroPage notifyIntroFinished = {this.notifyIntroFinished}
-                                experimentModule = {this.state.experimentModule}s/>
+      page_content = <IntroPage notifyIntroFinished = {this.notifyIntroFinished}></IntroPage>
     }
     const xp_page = <ExperimentPage question_module = {this.state.questionModule}
-                                    experiment_module = {this.state.experimentModule}
+                                    bugModule = {this.state.bugModule}
                                     naturalnessModule = {this.state.naturalnessModule}
                                     notifyExperimentFinished = {this.notifyExperimentFinished}/>
                                     
@@ -83,7 +82,6 @@ class App extends Component {
                                           naturalnessModule={this.state.naturalnessModule}
                                           bugModule = {this.state.bugModule}
                                           notifyDifficultySelected = {this.onDifficultySelected} 
-                                          experimentModule = {this.state.experimentModule}
                                           />
         </div>
         <div className="col-2">
@@ -99,7 +97,6 @@ class App extends Component {
                                 notifyQuestionsAnswered = {this.onQuestionsAnswered } 
                                 notifyCancel = {this.notifyRestart} 
                                 bugModule = {this.state.bugModule}
-                                experimentModule = {this.state.experimentModule}
                                 />
         </div>
         <div className="col-2">
@@ -114,7 +111,6 @@ class App extends Component {
                                           answers = { this.state.answers }
                                           notifyRestart = { this.notifyRestart }
                                           bugModule = {this.state.bugModule}
-                                          experimentModule = {this.state.experimentModule}
                                           />
                           </div>
                           <div className="col-2">
@@ -122,6 +118,11 @@ class App extends Component {
                           </div>
                         </div>
 
+    } else if (step === "experiement_results") {
+      page_content = <ExperimentResultPage
+                                          bugModule = {this.state.bugModule}
+                                          naturalnessModule={this.state.naturalnessModule}
+                                          />
     }
     return <div className="container main_page">
       {page_content}

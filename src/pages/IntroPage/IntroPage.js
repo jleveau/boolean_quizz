@@ -10,7 +10,6 @@ export default class IntroPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            experimentModule: props.experimentModule,
             experiment_time: config.xp_time,
             current_step: 0
         }
@@ -20,7 +19,7 @@ export default class IntroPage extends Component {
     }
 
     handleButtonExample(e) {
-        this.state.experimentModule.showAlertMessage()
+        this.state.bugModule.showAlertMessage()
     }
 
     handleNextButton() {

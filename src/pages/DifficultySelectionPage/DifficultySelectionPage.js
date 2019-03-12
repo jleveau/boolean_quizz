@@ -12,7 +12,6 @@ export default class DifficultySelectionPage extends Component {
             questionsOptions: config.questionsOptions,
             naturalnessModule: props.naturalnessModule,
             bugModule: this.props.bugModule,
-            experimentModule: props.experimentModule,
         }
         this.handleSelected = this.handleSelected.bind(this)
     }
