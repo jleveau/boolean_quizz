@@ -3,13 +3,27 @@ class ResultManager {
 
     register(data) {
         const result = new ResultModel(data);
-        return async () => {
-            try {
-                result.save()
-            } catch(e) {
-                console.error(e)
-            }
-        }
+        return new Promise((resolve, reject) => {
+            result.save((err) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve()
+                }
+            })
+        })
+    }
+
+    getAll() {
+        return new Promise((resolve, reject) => {
+            ResultModel.find({}, (err, data) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(data)
+                }
+            })
+        })
     }
 
 }

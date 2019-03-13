@@ -1,9 +1,23 @@
 const assert = require('assert');
 const ResultManager = require('../src/results/result')
-describe('Result', function() {
-  describe('Store results', function() {
-    it('store a fully complete result', async () => {
-        ResultManager.register(result1)
+const mongoose = require('mongoose')
+const config = require('../test/config')
+
+
+describe('Unit Testing', function() {
+  before(async () => {
+      await mongoose.connect(config.mongo, { useNewUrlParser: true })
+      await mongoose.model('Results').deleteMany({})
+      
+  })
+  after(async() => {
+    await mongoose.connection.close()
+  })
+  describe('Result', function() {
+    it('register result', async () => {
+        await ResultManager.register(result1)
+        const data = await ResultManager.getAll()
+        assert(data.length === 1)
     });
   });
 });
