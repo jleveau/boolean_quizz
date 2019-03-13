@@ -1,7 +1,7 @@
 const assert = require('assert');
 const ResultManager = require('../src/results/result')
 const mongoose = require('mongoose')
-const config = require('../test/config')
+const config = require('../config')
 
 
 describe('Unit Testing', function() {

@@ -1,0 +1,23 @@
+version: "3"
+services:
+
+  quizz:
+      container_name: quizz
+      build: .
+      restart: always
+      ports:
+        - "80:5000"
+        - "443:443"
+    
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    volumes:
+      - db-data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+    db-data:
+        driver: local
